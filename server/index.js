@@ -18,7 +18,7 @@ mongoose
 var corsOptions = {
   origin: process.env.REMOTE_CLIENT_URL,
   optionsSuccessStatus: 200,
-  credentials: true,
+  //   credentials: true,
 };
 
 const app = express();
