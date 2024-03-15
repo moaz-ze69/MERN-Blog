@@ -19,13 +19,10 @@ import {
   deleteStart,
   deleteSuccess,
   deleteFailure,
-  signOutSuccess
+  signOutSuccess,
 } from "../redux/user/userSlice";
 
-
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-
-
 
 const DashProfile = () => {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -43,8 +40,6 @@ const DashProfile = () => {
   const [formData, setFormData] = useState({});
 
   const [showModal, setShowModal] = useState(false);
-
-  
 
   const dispatch = useDispatch();
 
@@ -121,13 +116,19 @@ const DashProfile = () => {
     try {
       dispatch(updateStart());
 
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/api/user/update/${
+          currentUser._id
+        }`,
+        // `/api/user/update/${currentUser._id}`
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
 
@@ -148,9 +149,15 @@ const DashProfile = () => {
     setShowModal(false);
     try {
       dispatch(deleteStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/api/user/delete/${
+          currentUser._id
+        }`,
+        // `/api/user/delete/${currentUser._id}`
+        {
+          method: "DELETE",
+        }
+      );
 
       const data = await res.json();
 
@@ -159,7 +166,6 @@ const DashProfile = () => {
       } else {
         dispatch(deleteSuccess(data));
       }
-
     } catch (error) {
       dispatch(deleteFailure(error.message));
     }
@@ -167,9 +173,13 @@ const DashProfile = () => {
 
   const handleSignOut = async () => {
     try {
-      const res = await fetch(`/api/user/signout`, {
-        method: "POST",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_REACT_APP_API_BASE_URL}/api/user/signout`,
+        // `/api/user/signout`
+        {
+          method: "POST",
+        }
+      );
 
       const data = await res.json();
 
@@ -178,14 +188,10 @@ const DashProfile = () => {
       } else {
         dispatch(signOutSuccess());
       }
-
-
     } catch (error) {
       console.log(error.message);
     }
   };
-
-
 
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
@@ -253,24 +259,30 @@ const DashProfile = () => {
             placeholder="Change your password"
             onChange={handleChange}
           />
-          <Button type="submit" disabled={loading || imageFileUploading }>
-
+          <Button type="submit" disabled={loading || imageFileUploading}>
             {loading ? "Loading..." : "Update"}
-
           </Button>
 
-          {currentUser.isAdmin && (       
-            <Link to={"/create-post"}>  
-            <Button type="button" gradientDuoTone="purpleToBlue" className="w-full">Create a Post</Button>
+          {currentUser.isAdmin && (
+            <Link to={"/create-post"}>
+              <Button
+                type="button"
+                gradientDuoTone="purpleToBlue"
+                className="w-full"
+              >
+                Create a Post
+              </Button>
             </Link>
           )}
-          
-
         </div>
       </form>
       <div className="text-red-500 flex justify-between mt-5 mb-2">
-        <span className="cursor-pointer" onClick={() => setShowModal(true)}>Delete</span>
-        <span className="cursor-pointer" onClick={handleSignOut}>Sign out</span>
+        <span className="cursor-pointer" onClick={() => setShowModal(true)}>
+          Delete
+        </span>
+        <span className="cursor-pointer" onClick={handleSignOut}>
+          Sign out
+        </span>
       </div>
 
       {updateUserSuccess && <Alert color="success">{updateUserSuccess}</Alert>}
