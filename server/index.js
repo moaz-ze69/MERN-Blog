@@ -15,14 +15,15 @@ mongoose
   .then(() => console.log("MongoDB is Connected!"))
   .catch((err) => console.log(err));
 
-var corsOptions = {
-  origin: process.env.REMOTE_CLIENT_URL,
-  optionsSuccessStatus: 200,
-  //   credentials: true,
-};
-
 const app = express();
-app.use(cors(corsOptions));
+
+app.use(
+  cors({
+    origin: process.env.REMOTE_CLIENT_URL,
+    optionsSuccessStatus: 200,
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -35,9 +36,13 @@ app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello from Node API server!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello from Node API server!");
+// });
+
+app.get("/", (req, res) =>
+  res.json({ message: "Hello from Node API server!" })
+);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
